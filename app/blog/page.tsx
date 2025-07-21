@@ -48,7 +48,7 @@ export default function BlogPage() {
   useEffect(() => {
     const checkAdminSession = async () => {
       if (typeof window === 'undefined') return;
-      
+
       const token = localStorage.getItem("admin_token");
       if (token) {
         try {
@@ -321,7 +321,7 @@ export default function BlogPage() {
                 if (typeof window !== 'undefined') {
                   localStorage.removeItem("admin_token");
                 }
-                showToast('🔒 Admin mode disabled', 'success');
+                showToast('Admin session terminated successfully', 'success');
               } else {
                 setShowPasswordDialog(true);
               }
