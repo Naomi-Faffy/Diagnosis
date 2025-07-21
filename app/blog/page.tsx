@@ -311,7 +311,7 @@ export default function BlogPage() {
         </div>
 
         {/* Admin Toggle */}
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-2 right-4 z-80">
           <Button
             variant="outline"
             size="lg"
