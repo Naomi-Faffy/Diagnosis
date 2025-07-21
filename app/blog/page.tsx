@@ -310,6 +310,309 @@ export default function BlogPage() {
           </p>
         </div>
 
+        {/* Admin Toggle */}
+        <div className="fixed top-24 right-8 z-50">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (isAdminMode) {
+                setIsAdminMode(false);
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem("admin_token");
+                }
+                showToast('🔒 Admin mode disabled', 'success');
+              } else {
+                setShowPasswordDialog(true);
+              }
+            }}
+            className="bg-white/90 backdrop-blur-sm border-[var(--brand-blue)]/20 hover:bg-[var(--brand-orange)]/10"
+          >
+            {isAdminMode ? (
+              <>
+                <EyeOff className="w-4 h-4 mr-2" />
+                Exit Admin
+              </>
+            ) : (
+              <>
+                <Settings className="w-4 h-4 mr-2" />
+                Admin
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* Admin Password Dialog */}
+        <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+          <DialogContent className="sm:max-w-[425px] bg-white border-2 border-[var(--brand-blue)]/20 shadow-2xl">
+            <DialogHeader className="text-center pb-6">
+              <DialogTitle className="font-orbitron text-2xl font-bold text-gray-900 flex items-center justify-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-[var(--brand-orange)] to-red-500 rounded-full flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-white" />
+                </div>
+                <span>Admin Access</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="admin-password" className="text-sm font-semibold text-gray-700">
+                  Enter Admin Password
+                </Label>
+                <Input
+                  id="admin-password"
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="border-2 border-gray-200 focus:border-[var(--brand-orange)] rounded-lg"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleAdminLogin();
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowPasswordDialog(false);
+                    setAdminPassword("");
+                  }}
+                  className="flex-1 border-2 border-gray-200 hover:bg-gray-50 font-orbitron"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAdminLogin}
+                  className="flex-1 bg-gradient-to-r from-[var(--brand-orange)] to-red-500 hover:from-red-500 hover:to-[var(--brand-orange)] text-white font-orbitron font-bold"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Admin Controls */}
+        {isAdminMode && (
+          <div className="mb-8 bg-gradient-to-r from-[var(--brand-blue)]/10 via-white to-[var(--brand-orange)]/10 rounded-3xl p-8 border-2 border-gray-200 shadow-xl">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 space-y-4 lg:space-y-0">
+              <div>
+                <h3 className="font-orbitron font-bold text-2xl text-gray-900 flex items-center">
+                  ⚡ Content Management Dashboard
+                </h3>
+                <p className="text-gray-600 mt-2">Create, edit, and manage your blog posts with ease</p>
+              </div>
+              <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    className="bg-gradient-to-r from-[var(--brand-orange)] to-red-500 hover:from-red-500 hover:to-[var(--brand-orange)] text-white font-orbitron font-bold px-8 py-4 text-lg rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
+                    onClick={() => {
+                      setEditingPost(null);
+                      resetForm();
+                    }}
+                  >
+                    <Plus className="w-5 h-5 mr-3" />
+                    ✨ Create New Post
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto bg-white border-2 border-gray-200 shadow-2xl">
+                  <DialogHeader className="pb-6 border-b border-gray-200">
+                    <DialogTitle className="font-orbitron text-2xl font-bold text-gray-900 flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-[var(--brand-orange)] to-red-500 rounded-full flex items-center justify-center">
+                        {editingPost ? <Edit3 className="w-5 h-5 text-white" /> : <Plus className="w-5 h-5 text-white" />}
+                      </div>
+                      <span>{editingPost ? "Edit Blog Post" : "Create New Blog Post"}</span>
+                    </DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="space-y-8 pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="title" className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                            <MessageSquare className="w-4 h-4 text-[var(--brand-orange)]" />
+                            <span>Title *</span>
+                          </Label>
+                          <Input
+                            id="title"
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            placeholder="Enter blog post title..."
+                            className="border-2 border-gray-200 focus:border-[var(--brand-orange)] rounded-lg text-lg p-4"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="category" className="text-sm font-semibold text-gray-700">
+                            Category
+                          </Label>
+                          <Input
+                            id="category"
+                            value={formData.category}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                            placeholder="e.g., Technology, Business, etc."
+                            className="border-2 border-gray-200 focus:border-[var(--brand-orange)] rounded-lg"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="image-upload" className="text-sm font-semibold text-gray-700">
+                            Featured Image
+                          </Label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[var(--brand-orange)] transition-colors">
+                            <input
+                              id="image-upload"
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="hidden"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => document.getElementById('image-upload')?.click()}
+                              className="mb-4"
+                            >
+                              Choose Image
+                            </Button>
+                            {imagePreview && (
+                              <div className="mt-4">
+                                <Image
+                                  src={imagePreview}
+                                  alt="Preview"
+                                  width={300}
+                                  height={200}
+                                  className="mx-auto rounded-lg border border-gray-200"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                          <Switch
+                            id="published"
+                            checked={formData.published}
+                            onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
+                          />
+                          <Label htmlFor="published" className="text-sm font-semibold text-gray-700">
+                            Publish immediately
+                          </Label>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="excerpt" className="text-sm font-semibold text-gray-700">
+                            Excerpt *
+                          </Label>
+                          <Textarea
+                            id="excerpt"
+                            value={formData.excerpt}
+                            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                            placeholder="Brief description of the blog post..."
+                            className="border-2 border-gray-200 focus:border-[var(--brand-orange)] rounded-lg min-h-[120px]"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="content" className="text-sm font-semibold text-gray-700">
+                            Content *
+                          </Label>
+                          <Textarea
+                            id="content"
+                            value={formData.content}
+                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            placeholder="Write your blog post content..."
+                            className="border-2 border-gray-200 focus:border-[var(--brand-orange)] rounded-lg min-h-[300px]"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setIsCreateDialogOpen(false);
+                          setEditingPost(null);
+                          resetForm();
+                        }}
+                        className="flex-1 border-2 border-gray-200 hover:bg-gray-50 font-orbitron py-3"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={createPostMutation.isPending || updatePostMutation.isPending}
+                        className="flex-1 bg-gradient-to-r from-[var(--brand-orange)] to-red-500 hover:from-red-500 hover:to-[var(--brand-orange)] text-white font-orbitron font-bold py-3 transform hover:scale-105 transition-all duration-200"
+                      >
+                        {createPostMutation.isPending || updatePostMutation.isPending ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                            <span>Saving...</span>
+                          </div>
+                        ) : (
+                          <>
+                            {editingPost ? <Edit3 className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
+                            {editingPost ? "Update Post" : "Create Post"}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <Plus className="w-5 h-5 text-green-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800">Create Posts</h4>
+                </div>
+                <p className="text-sm text-gray-600">Add new blog posts with rich content and images</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Edit3 className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800">Edit Posts</h4>
+                </div>
+                <p className="text-sm text-gray-600">Click the edit button on any post to modify it</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <Trash2 className="w-5 h-5 text-red-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800">Delete Posts</h4>
+                </div>
+                <p className="text-sm text-gray-600">Remove unwanted posts with confirmation dialog</p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-center space-x-2 text-amber-800">
+                <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                <span className="text-sm font-medium">Important Note</span>
+              </div>
+              <p className="text-xs text-amber-700 mt-1">All changes are saved immediately. There's no undo function, so please review carefully before saving.</p>
+            </div>
+          </div>
+        )}
+
         {/* Blog Posts Grid */}
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {blogPosts.map((post) => (
