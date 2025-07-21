@@ -311,10 +311,10 @@ export default function BlogPage() {
         </div>
 
         {/* Admin Toggle */}
-        <div className="fixed top-2 right-4 z-80">
+        <div className="flex justify-end mb-4">
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={() => {
               if (isAdminMode) {
                 setIsAdminMode(false);
@@ -326,17 +326,17 @@ export default function BlogPage() {
                 setShowPasswordDialog(true);
               }
             }}
-            className="bg-gradient-to-r from-[var(--brand-orange)] to-red-500 text-white font-orbitron font-bold shadow-lg border-2 border-white/20 hover:scale-105 transition-all duration-200"
+            className="bg-gradient-to-r from-[var(--brand-orange)] to-red-500 text-white font-orbitron font-medium text-xs px-3 py-2 shadow-md border border-white/20 hover:scale-105 transition-all duration-200"
           >
             {isAdminMode ? (
               <>
-                <EyeOff className="w-5 h-5 mr-2" />
+                <EyeOff className="w-3 h-3 mr-1" />
                 Exit Admin
               </>
             ) : (
               <>
-                <Settings className="w-5 h-5 mr-2" />
-                🔐 Admin Login
+                <Settings className="w-3 h-3 mr-1" />
+                Admin
               </>
             )}
           </Button>
