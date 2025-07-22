@@ -1,5 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 
+<<<<<<< HEAD
 // Get database URL from various possible environment variable names
 let databaseUrl = process.env.DATABASE_URL || 
                   process.env.NEON_DATABASE_URL || 
@@ -38,6 +39,10 @@ if (!databaseUrl) {
 
 if (!databaseUrl) {
   throw new Error("Database configuration missing. Please ensure DATABASE_URL or individual Postgres environment variables are set.");
+=======
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL, ensure the database is provisioned");
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
 }
 
 export default defineConfig({
@@ -45,6 +50,10 @@ export default defineConfig({
   schema: "./shared/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
+<<<<<<< HEAD
     url: databaseUrl,
+=======
+    url: process.env.DATABASE_URL,
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
   },
 });

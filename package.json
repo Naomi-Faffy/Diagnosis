@@ -11,7 +11,10 @@
     "start": "next start",
     "lint": "next lint",
     "setup-db": "tsx scripts/setup-db.ts",
+<<<<<<< HEAD
     "verify-deployment": "tsx scripts/verify-deployment.ts",
+=======
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
     "postinstall": "echo 'Installation complete'"
   },
   "dependencies": {

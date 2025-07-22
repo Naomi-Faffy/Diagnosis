@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import * as schema from '../../shared/schema';
@@ -98,3 +99,10 @@ export function isDatabaseConnected() {
 
 // Lazy export for backwards compatibility
 export const neonDb = null; // Remove immediate connection attempt
+=======
+import { drizzle } from 'drizzle-orm/vercel-postgres';
+import { sql } from '@vercel/postgres';
+import * as schema from '../../shared/schema';
+
+export const db = drizzle(sql, { schema });
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78

@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { Pool } from '@neondatabase/serverless';
+=======
+import { sql } from '@vercel/postgres';
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
 
 async function setupDatabase() {
   try {
     console.log('Setting up database tables...');
     
+<<<<<<< HEAD
     // Get database URL from various possible environment variable names
     let databaseUrl = process.env.DATABASE_URL || 
                       process.env.NEON_DATABASE_URL || 
@@ -57,16 +62,27 @@ async function setupDatabase() {
     // Create users table
     console.log('Creating users table...');
     await pool.query(`
+=======
+    // Create users table
+    await sql`
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL
       );
+<<<<<<< HEAD
     `);
     
     // Create blog_posts table
     console.log('Creating blog_posts table...');
     await pool.query(`
+=======
+    `;
+    
+    // Create blog_posts table
+    await sql`
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
       CREATE TABLE IF NOT EXISTS blog_posts (
         id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
@@ -77,6 +93,7 @@ async function setupDatabase() {
         published BOOLEAN DEFAULT true,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
+<<<<<<< HEAD
     `);
 
     // Insert a default admin user (password: admin123)
@@ -98,6 +115,21 @@ async function setupDatabase() {
     console.error('   1. Check your database environment variables in Vercel');
     console.error('   2. Ensure your Neon database is accessible');
     console.error('   3. Verify your connection string format');
+=======
+    `;
+
+    // Insert a default admin user (password: admin123)
+    // In production, change this password!
+    await sql`
+      INSERT INTO users (username, password) 
+      VALUES ('admin', '$2b$10$8K1p/1DwTJ6GdgqUB3LJO.rGwUgr4Vm5TLh7v5kUYOX2o8xH1jX2a')
+      ON CONFLICT (username) DO NOTHING;
+    `;
+
+    console.log('Database setup completed successfully!');
+  } catch (error) {
+    console.error('Database setup failed:', error);
+>>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
     process.exit(1);
   }
 }
