@@ -11,10 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "setup-db": "tsx scripts/setup-db.ts",
-<<<<<<< HEAD
     "verify-deployment": "tsx scripts/verify-deployment.ts",
-=======
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
     "postinstall": "echo 'Installation complete'"
   },
   "dependencies": {
@@ -105,7 +102,7 @@
     "@types/ws": "^8.5.13",
     "autoprefixer": "^10.4.20",
     "dotenv-cli": "^8.0.0",
-    "drizzle-kit": "^0.30.4",
+    "drizzle-kit": "^0.30.6",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.4.1",
     "postcss": "^8.4.47",

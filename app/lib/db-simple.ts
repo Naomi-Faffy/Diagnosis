@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-import { getDatabaseConnection } from './db';
+import { db } from './db';
 import { blogPosts } from '../../shared/schema';
 import { eq, desc } from 'drizzle-orm';
 import { InsertBlogPost } from '../../shared/schema';
 
 // Mock data that will be used as fallback if database is not configured
-=======
-// Simple database operations with mock data fallback
-
-// Mock data that will always work
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
 const mockBlogPosts = [
   {
     id: 1,
@@ -97,7 +91,6 @@ Regular sensor maintenance is crucial for optimal vehicle performance and longev
   }
 ];
 
-<<<<<<< HEAD
 class DatabaseError extends Error {
   constructor(message: string, public readonly isConnectionError: boolean = false) {
     super(message);
@@ -124,14 +117,11 @@ function createUserFriendlyError(operation: string, error: any): DatabaseError {
   );
 }
 
-// Database operations with proper error handling and fallback to mock data
 export const simpleDb = {
   getBlogPosts: async () => {
-    const db = getDatabaseConnection();
-    
     if (!db) {
       console.log('Database not connected, using mock data');
-      return mockBlogPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return mockBlogPosts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
     try {
@@ -143,13 +133,11 @@ export const simpleDb = {
       return posts.length > 0 ? posts : mockBlogPosts;
     } catch (error) {
       console.error('Database error fetching posts, falling back to mock data:', error);
-      return mockBlogPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return mockBlogPosts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
   },
 
   getBlogPost: async (id: number) => {
-    const db = getDatabaseConnection();
-    
     if (!db) {
       console.log('Database not connected, using mock data');
       return mockBlogPosts.find(post => post.id === id) || null;
@@ -170,8 +158,6 @@ export const simpleDb = {
   },
 
   createBlogPost: async (postData: InsertBlogPost) => {
-    const db = getDatabaseConnection();
-
     if (!db) {
       if (process.env.NODE_ENV === 'production') {
         throw new DatabaseError(
@@ -198,8 +184,6 @@ export const simpleDb = {
   },
 
   updateBlogPost: async (id: number, postData: Partial<InsertBlogPost>) => {
-    const db = getDatabaseConnection();
-
     if (!db) {
       if (process.env.NODE_ENV === 'production') {
         throw new DatabaseError(
@@ -236,8 +220,6 @@ export const simpleDb = {
   },
 
   deleteBlogPost: async (id: number) => {
-    const db = getDatabaseConnection();
-
     if (!db) {
       if (process.env.NODE_ENV === 'production') {
         throw new DatabaseError(
@@ -274,8 +256,6 @@ export const simpleDb = {
 
   // Status info
   isConnected: async () => {
-    const db = getDatabaseConnection();
-    
     if (!db) {
       return false;
     }
@@ -283,14 +263,12 @@ export const simpleDb = {
     try {
       await db.select().from(blogPosts).limit(1);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
 
   getStatus: async () => {
-    const db = getDatabaseConnection();
-    
     if (!db) {
       return {
         database: 'not_configured',
@@ -304,46 +282,11 @@ export const simpleDb = {
         database: 'connected',
         message: 'Database connection is active and working properly.'
       };
-    } catch (error) {
+    } catch {
       return {
         database: 'error',
         message: 'Database connection failed. Using fallback data where possible.'
       };
     }
   }
-=======
-// Simple database operations that always work
-export const simpleDb = {
-  // Always return mock data for now
-  getBlogPosts: async () => {
-    // Sort by creation date, newest first
-    return mockBlogPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  },
-
-  // Get single blog post
-  getBlogPost: async (id: number) => {
-    const post = mockBlogPosts.find(post => post.id === id);
-    return post || null;
-  },
-
-  // For now, these operations will show helpful error messages
-  createBlogPost: async (postData: any) => {
-    throw new Error('Blog creation requires database configuration. Please add Vercel Postgres to enable this feature.');
-  },
-
-  updateBlogPost: async (id: number, postData: any) => {
-    throw new Error('Blog editing requires database configuration. Please add Vercel Postgres to enable this feature.');
-  },
-
-  deleteBlogPost: async (id: number) => {
-    throw new Error('Blog deletion requires database configuration. Please add Vercel Postgres to enable this feature.');
-  },
-
-  // Status info
-  isConnected: () => false,
-  getStatus: () => ({
-    database: 'mock',
-    message: 'Using mock data. Configure Vercel Postgres for full functionality.'
-  })
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
 };
