@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { simpleDb } from '../../../lib/db-simple';
 import { insertBlogPostSchema } from '../../../../shared/schema';
 
-<<<<<<< HEAD
 function createErrorResponse(message: string, status: number = 500) {
   return NextResponse.json({
     error: message,
@@ -10,8 +9,6 @@ function createErrorResponse(message: string, status: number = 500) {
   }, { status });
 }
 
-=======
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
 export async function GET(
   _req: NextRequest,
   context: { params: { id: string } }
@@ -19,7 +16,6 @@ export async function GET(
   try {
     const id = parseInt(context.params.id, 10);
     if (isNaN(id)) {
-<<<<<<< HEAD
       return createErrorResponse('The blog post ID provided is not valid. Please check the URL and try again.', 400);
     }
 
@@ -35,20 +31,6 @@ export async function GET(
       'We are currently experiencing issues loading this blog post. Please try again in a moment.',
       500
     );
-=======
-      return NextResponse.json({ error: 'Invalid blog post ID' }, { status: 400 });
-    }
-    
-    const post = await simpleDb.getBlogPost(id);
-    if (!post) {
-      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
-    }
-    
-    return NextResponse.json(post);
-  } catch (error) {
-    console.error('Failed to fetch blog post:', error);
-    return NextResponse.json({ error: 'Failed to fetch blog post' }, { status: 500 });
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
   }
 }
 
@@ -59,7 +41,6 @@ export async function PUT(
   try {
     const id = parseInt(context.params.id, 10);
     if (isNaN(id)) {
-<<<<<<< HEAD
       return createErrorResponse('The blog post ID provided is not valid. Please check the URL and try again.', 400);
     }
 
@@ -74,26 +55,10 @@ export async function PUT(
       }, { status: 400 });
     }
 
-=======
-      return NextResponse.json({ error: 'Invalid blog post ID' }, { status: 400 });
-    }
-    
-    const body = await req.json();
-    const result = insertBlogPostSchema.partial().safeParse(body);
-    
-    if (!result.success) {
-      return NextResponse.json({ 
-        error: 'Invalid blog post data', 
-        details: result.error.errors 
-      }, { status: 400 });
-    }
-    
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
     const post = await simpleDb.updateBlogPost(id, result.data);
     return NextResponse.json(post);
   } catch (error: any) {
     console.error('Failed to update blog post:', error);
-<<<<<<< HEAD
 
     const isUserFriendly = error.name === 'DatabaseError';
     const message = isUserFriendly
@@ -101,11 +66,6 @@ export async function PUT(
       : 'We encountered an issue while updating your blog post. Please try again or contact support if the problem persists.';
 
     return createErrorResponse(message, 500);
-=======
-    return NextResponse.json({ 
-      error: error.message || 'Failed to update blog post' 
-    }, { status: 500 });
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
   }
 }
 
@@ -116,7 +76,6 @@ export async function DELETE(
   try {
     const id = parseInt(context.params.id, 10);
     if (isNaN(id)) {
-<<<<<<< HEAD
       return createErrorResponse('The blog post ID provided is not valid. Please check the URL and try again.', 400);
     }
 
@@ -135,17 +94,5 @@ export async function DELETE(
       : 'We encountered an issue while deleting the blog post. Please try again or contact support if the problem persists.';
 
     return createErrorResponse(message, 500);
-=======
-      return NextResponse.json({ error: 'Invalid blog post ID' }, { status: 400 });
-    }
-    
-    const deleted = await simpleDb.deleteBlogPost(id);
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('Failed to delete blog post:', error);
-    return NextResponse.json({ 
-      error: error.message || 'Failed to delete blog post' 
-    }, { status: 500 });
->>>>>>> 735c1d4b221ba9b81c22d6ff723c793eb5329f78
   }
 }
