@@ -68,7 +68,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm">
               <div>
                 <span className="text-gray-400">Phone:</span>
-                <div className="text-gray-300">+263 772 974 846</div>
+                <div className="text-gray-300">0292 883 884</div>
               </div>
               <div>
                 <span className="text-gray-400">Email:</span>
@@ -77,7 +77,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="text-2x">
-            <span className="text-orange-500">For Genuine OEM Parts Visit </span>
+            <span className="text-orange-500">For all your hybrid engines, gear boxes, body part and hybrid auto accessories : </span>
             <a 
               href="https://fadarc.com" 
               target="_blank" 
